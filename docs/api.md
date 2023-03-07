@@ -1,20 +1,20 @@
-# LiquidCrystal
+# AcksenLiquidCrystal
 
 ## Functions
 
-### `LiquidCrystal()`
+### `AcksenLiquidCrystal()`
 
 #### Description
 
-Creates a variable of type LiquidCrystal. The display can be controlled using 4 or 8 data lines. If the former, omit the pin numbers for d0 to d3 and leave those lines unconnected. The RW pin can be tied to ground instead of connected to a pin on the Arduino; if so, omit it from this function's parameters.
+Creates a variable of type AcksenLiquidCrystal. The display can be controlled using 4 or 8 data lines. If the former, omit the pin numbers for d0 to d3 and leave those lines unconnected. The RW pin can be tied to ground instead of connected to a pin on the Arduino; if so, omit it from this function's parameters.
 
 #### Syntax
 
 ```
-LiquidCrystal(rs, enable, d4, d5, d6, d7)
-LiquidCrystal(rs, rw, enable, d4, d5, d6, d7)
-LiquidCrystal(rs, enable, d0, d1, d2, d3, d4, d5, d6, d7)
-LiquidCrystal(rs, rw, enable, d0, d1, d2, d3, d4, d5, d6, d7)
+AcksenLiquidCrystal(rs, enable, d4, d5, d6, d7)
+AcksenLiquidCrystal(rs, rw, enable, d4, d5, d6, d7)
+AcksenLiquidCrystal(rs, enable, d0, d1, d2, d3, d4, d5, d6, d7)
+AcksenLiquidCrystal(rs, rw, enable, d0, d1, d2, d3, d4, d5, d6, d7)
 ```
 
 #### Parameters
@@ -29,9 +29,9 @@ d0, d1, d2, d3, d4, d5, d6, d7: the numbers of the Arduino pins that are connect
 #### Example
 
 ```
-#include <LiquidCrystal.h>
+#include <AcksenLiquidCrystal.h>
 
-LiquidCrystal lcd(12, 11, 10, 5, 4, 3, 2);
+AcksenLiquidCrystal lcd(12, 11, 10, 5, 4, 3, 2);
 
 void setup()
 {
@@ -55,7 +55,7 @@ lcd.begin(cols, rows)
 ```
 
 #### Parameters
-lcd: a variable of type LiquidCrystal
+lcd: a variable of type AcksenLiquidCrystal
 
 cols: the number of columns that the display has
 
@@ -74,7 +74,7 @@ lcd.clear()
 ```
 
 #### Parameters
-lcd: a variable of type LiquidCrystal
+lcd: a variable of type AcksenLiquidCrystal
 
 ### `home()`
 
@@ -89,7 +89,7 @@ lcd.home()
 ```
 
 #### Parameters
-lcd: a variable of type LiquidCrystal
+lcd: a variable of type AcksenLiquidCrystal
 
 
 ### `setCursor()`
@@ -105,7 +105,7 @@ lcd.setCursor(col, row)
 ```
 
 #### Parameters
-lcd: a variable of type LiquidCrystal
+lcd: a variable of type AcksenLiquidCrystal
 
 col: the column at which to position the cursor (with 0 being the first column)
 
@@ -124,7 +124,7 @@ lcd.write(data)
 ```
 
 #### Parameters
-lcd: a variable of type LiquidCrystal
+lcd: a variable of type AcksenLiquidCrystal
 
 data: the character to write to the display
 
@@ -136,9 +136,9 @@ write() will return the number of bytes written, though reading that number is o
 #### Example
 
 ```
-#include <LiquidCrystal.h>
+#include <AcksenLiquidCrystal.h>
 
-LiquidCrystal lcd(12, 11, 10, 5, 4, 3, 2);
+AcksenLiquidCrystal lcd(12, 11, 10, 5, 4, 3, 2);
 
 void setup()
 {
@@ -167,7 +167,7 @@ lcd.print(data, BASE)
 ```
 
 #### Parameters
-lcd: a variable of type LiquidCrystal
+lcd: a variable of type AcksenLiquidCrystal
 
 data: the data to print (char, byte, int, long, or string)
 
@@ -181,9 +181,9 @@ print() will return the number of bytes written, though reading that number is o
 #### Example
 
 ```
-#include <LiquidCrystal.h>
+#include <AcksenLiquidCrystal.h>
 
-LiquidCrystal lcd(12, 11, 10, 5, 4, 3, 2);
+AcksenLiquidCrystal lcd(12, 11, 10, 5, 4, 3, 2);
 
 void setup()
 {
@@ -206,7 +206,7 @@ lcd.cursor()
 ```
 
 #### Parameters
-lcd: a variable of type LiquidCrystal
+lcd: a variable of type AcksenLiquidCrystal
 
 
 ### `noCursor()`
@@ -222,7 +222,7 @@ lcd.noCursor()
 ```
 
 #### Parameters
-lcd: a variable of type LiquidCrystal
+lcd: a variable of type AcksenLiquidCrystal
 
 
 ### `blink()`
@@ -238,7 +238,7 @@ lcd.blink()
 ```
 
 #### Parameters
-lcd: a variable of type LiquidCrystal
+lcd: a variable of type AcksenLiquidCrystal
 
 ### `noBlink()`
 
@@ -253,7 +253,7 @@ lcd.noBlink()
 ```
 
 #### Parameters
-lcd: a variable of type LiquidCrystal
+lcd: a variable of type AcksenLiquidCrystal
 
 ### `display()`
 
@@ -268,7 +268,7 @@ lcd.display()
 ```
 
 #### Parameters
-lcd: a variable of type LiquidCrystal
+lcd: a variable of type AcksenLiquidCrystal
 
 ### `noDisplay()`
 
@@ -283,7 +283,7 @@ lcd.noDisplay()
 ```
 
 #### Parameters
-lcd: a variable of type LiquidCrystal
+lcd: a variable of type AcksenLiquidCrystal
 
 ### `scrollDisplayLeft()`
 
@@ -298,7 +298,7 @@ lcd.scrollDisplayLeft()
 ```
 
 #### Parameters
-lcd: a variable of type LiquidCrystal
+lcd: a variable of type AcksenLiquidCrystal
 
 ### `scrollDisplayRight()`
 
@@ -313,7 +313,7 @@ lcd.scrollDisplayRight()
 ```
 
 #### Parameters
-lcd: a variable of type LiquidCrystal
+lcd: a variable of type AcksenLiquidCrystal
 
 ### `autoscroll()`
 
@@ -328,7 +328,7 @@ lcd.autoscroll()
 ```
 
 #### Parameters
-lcd: a variable of type LiquidCrystal
+lcd: a variable of type AcksenLiquidCrystal
 
 ### `noAutoscroll()`
 
@@ -343,7 +343,7 @@ lcd.noAutoscroll()
 ```
 
 #### Parameters
-lcd: a variable of type LiquidCrystal
+lcd: a variable of type AcksenLiquidCrystal
 
 ### `leftToRight()`
 
@@ -358,7 +358,7 @@ lcd.leftToRight()
 ```
 
 #### Parameters
-lcd: a variable of type LiquidCrystal
+lcd: a variable of type AcksenLiquidCrystal
 
 ### `rightToLeft()`
 
@@ -373,7 +373,7 @@ lcd.rightToLeft()
 ```
 
 #### Parameters
-lcd: a variable of type LiquidCrystal
+lcd: a variable of type AcksenLiquidCrystal
 
 ### `createChar()`
 
@@ -390,7 +390,7 @@ lcd.createChar(num, data)
 ```
 
 #### Parameters
-lcd: a variable of type LiquidCrystal
+lcd: a variable of type AcksenLiquidCrystal
 
 num: which character to create (0 to 7)
 
@@ -400,9 +400,9 @@ data: the character's pixel data
 
 ```
 
-#include <LiquidCrystal.h>
+#include <AcksenLiquidCrystal.h>
 
-LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+AcksenLiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
 byte smiley[8] = {
   B00000,

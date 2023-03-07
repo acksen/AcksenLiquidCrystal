@@ -1,12 +1,12 @@
 #######################################
-# Syntax Coloring Map For LiquidCrystal
+# Syntax Coloring Map For AcksenLiquidCrystal
 #######################################
 
 #######################################
 # Datatypes (KEYWORD1)
 #######################################
 
-LiquidCrystal	KEYWORD1	LiquidCrystal
+AcksenLiquidCrystal	KEYWORD1	AcksenLiquidCrystal
 
 #######################################
 # Methods and Functions (KEYWORD2)

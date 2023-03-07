@@ -1,4 +1,8 @@
-#include "LiquidCrystal.h"
+// Acksen Liquid Crystal Library v1.0.8
+// Forked from Arduino LiquidCrystal v1.0.7 (https://github.com/arduino-libraries/LiquidCrystal)
+// Additions (c) Acksen Ltd 2023
+
+#include "AcksenLiquidCrystal.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -22,35 +26,35 @@
 //
 // Note, however, that resetting the Arduino doesn't reset the LCD, so we
 // can't assume that it's in that state when a sketch starts (and the
-// LiquidCrystal constructor is called).
+// AcksenLiquidCrystal constructor is called).
 
-LiquidCrystal::LiquidCrystal(uint8_t rs, uint8_t rw, uint8_t enable,
+AcksenLiquidCrystal::AcksenLiquidCrystal(uint8_t rs, uint8_t rw, uint8_t enable,
 			     uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3,
 			     uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7)
 {
   init(0, rs, rw, enable, d0, d1, d2, d3, d4, d5, d6, d7);
 }
 
-LiquidCrystal::LiquidCrystal(uint8_t rs, uint8_t enable,
+AcksenLiquidCrystal::AcksenLiquidCrystal(uint8_t rs, uint8_t enable,
 			     uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3,
 			     uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7)
 {
   init(0, rs, 255, enable, d0, d1, d2, d3, d4, d5, d6, d7);
 }
 
-LiquidCrystal::LiquidCrystal(uint8_t rs, uint8_t rw, uint8_t enable,
+AcksenLiquidCrystal::AcksenLiquidCrystal(uint8_t rs, uint8_t rw, uint8_t enable,
 			     uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3)
 {
   init(1, rs, rw, enable, d0, d1, d2, d3, 0, 0, 0, 0);
 }
 
-LiquidCrystal::LiquidCrystal(uint8_t rs,  uint8_t enable,
+AcksenLiquidCrystal::AcksenLiquidCrystal(uint8_t rs,  uint8_t enable,
 			     uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3)
 {
   init(1, rs, 255, enable, d0, d1, d2, d3, 0, 0, 0, 0);
 }
 
-void LiquidCrystal::init(uint8_t fourbitmode, uint8_t rs, uint8_t rw, uint8_t enable,
+void AcksenLiquidCrystal::init(uint8_t fourbitmode, uint8_t rs, uint8_t rw, uint8_t enable,
 			 uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3,
 			 uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7)
 {
@@ -75,7 +79,7 @@ void LiquidCrystal::init(uint8_t fourbitmode, uint8_t rs, uint8_t rw, uint8_t en
   begin(16, 1);  
 }
 
-void LiquidCrystal::begin(uint8_t cols, uint8_t lines, uint8_t dotsize) {
+void AcksenLiquidCrystal::begin(uint8_t cols, uint8_t lines, bool bApplyStartupDelay, uint8_t dotsize) {
   if (lines > 1) {
     _displayfunction |= LCD_2LINE;
   }
@@ -104,13 +108,15 @@ void LiquidCrystal::begin(uint8_t cols, uint8_t lines, uint8_t dotsize) {
   // SEE PAGE 45/46 FOR INITIALIZATION SPECIFICATION!
   // according to datasheet, we need at least 40 ms after power rises above 2.7 V
   // before sending commands. Arduino can turn on way before 4.5 V so we'll wait 50
-  delayMicroseconds(50000); 
+  if (bApplyStartupDelay == true)
+  {
+      delayMicroseconds(50000);
+  }
+
   // Now we pull both RS and R/W low to begin commands
   digitalWrite(_rs_pin, LOW);
   digitalWrite(_enable_pin, LOW);
-  if (_rw_pin != 255) { 
-    digitalWrite(_rw_pin, LOW);
-  }
+  rw_writeto();
   
   //put the LCD into 4 bit or 8 bit mode
   if (! (_displayfunction & LCD_8BITMODE)) {
@@ -161,10 +167,13 @@ void LiquidCrystal::begin(uint8_t cols, uint8_t lines, uint8_t dotsize) {
   _displaymode = LCD_ENTRYLEFT | LCD_ENTRYSHIFTDECREMENT;
   // set the entry mode
   command(LCD_ENTRYMODESET | _displaymode);
+  
+  // Set R/W into Read From mode to prevent any noise on data/supply signals corrupting display
+  rw_readfrom();
 
 }
 
-void LiquidCrystal::setRowOffsets(int row0, int row1, int row2, int row3)
+void AcksenLiquidCrystal::setRowOffsets(int row0, int row1, int row2, int row3)
 {
   _row_offsets[0] = row0;
   _row_offsets[1] = row1;
@@ -173,19 +182,28 @@ void LiquidCrystal::setRowOffsets(int row0, int row1, int row2, int row3)
 }
 
 /********** high level commands, for the user! */
-void LiquidCrystal::clear()
+void AcksenLiquidCrystal::clear()
 {
+  rw_writeto();
+	
   command(LCD_CLEARDISPLAY);  // clear display, set cursor position to zero
   delayMicroseconds(2000);  // this command takes a long time!
+  
+  rw_readfrom();
 }
 
-void LiquidCrystal::home()
+void AcksenLiquidCrystal::home()
 {
+  rw_writeto();
+
   command(LCD_RETURNHOME);  // set cursor position to zero
   delayMicroseconds(2000);  // this command takes a long time!
+   
+  rw_readfrom();
+
 }
 
-void LiquidCrystal::setCursor(uint8_t col, uint8_t row)
+void AcksenLiquidCrystal::setCursor(uint8_t col, uint8_t row)
 {
   const size_t max_lines = sizeof(_row_offsets) / sizeof(*_row_offsets);
   if ( row >= max_lines ) {
@@ -195,88 +213,171 @@ void LiquidCrystal::setCursor(uint8_t col, uint8_t row)
     row = _numlines - 1;    // we count rows starting w/ 0
   }
   
+  rw_writeto();
+
   command(LCD_SETDDRAMADDR | (col + _row_offsets[row]));
+   
+  rw_readfrom();
+
 }
 
 // Turn the display on/off (quickly)
-void LiquidCrystal::noDisplay() {
+void AcksenLiquidCrystal::noDisplay() {
   _displaycontrol &= ~LCD_DISPLAYON;
+
+  rw_writeto();
+
   command(LCD_DISPLAYCONTROL | _displaycontrol);
+   
+  rw_readfrom();
+
 }
-void LiquidCrystal::display() {
+void AcksenLiquidCrystal::display() {
   _displaycontrol |= LCD_DISPLAYON;
+
+  rw_writeto();
+
   command(LCD_DISPLAYCONTROL | _displaycontrol);
+   
+  rw_readfrom();
+
 }
 
 // Turns the underline cursor on/off
-void LiquidCrystal::noCursor() {
+void AcksenLiquidCrystal::noCursor() {
   _displaycontrol &= ~LCD_CURSORON;
+
+  rw_writeto();
+
   command(LCD_DISPLAYCONTROL | _displaycontrol);
+   
+  rw_readfrom();
+
 }
-void LiquidCrystal::cursor() {
+void AcksenLiquidCrystal::cursor() {
   _displaycontrol |= LCD_CURSORON;
+
+  rw_writeto();
+
   command(LCD_DISPLAYCONTROL | _displaycontrol);
+   
+  rw_readfrom();
+
 }
 
 // Turn on and off the blinking cursor
-void LiquidCrystal::noBlink() {
+void AcksenLiquidCrystal::noBlink() {
   _displaycontrol &= ~LCD_BLINKON;
+
+  rw_writeto();
+
   command(LCD_DISPLAYCONTROL | _displaycontrol);
+ 
+  rw_readfrom();
+
 }
-void LiquidCrystal::blink() {
+void AcksenLiquidCrystal::blink() {
   _displaycontrol |= LCD_BLINKON;
+
+  rw_writeto();
+
   command(LCD_DISPLAYCONTROL | _displaycontrol);
+   
+  rw_readfrom();
+
 }
 
 // These commands scroll the display without changing the RAM
-void LiquidCrystal::scrollDisplayLeft(void) {
+void AcksenLiquidCrystal::scrollDisplayLeft(void) {
+
+  rw_writeto();
+
   command(LCD_CURSORSHIFT | LCD_DISPLAYMOVE | LCD_MOVELEFT);
+    
+  rw_readfrom();
+
 }
-void LiquidCrystal::scrollDisplayRight(void) {
+void AcksenLiquidCrystal::scrollDisplayRight(void) {
+
+  rw_writeto();
+
   command(LCD_CURSORSHIFT | LCD_DISPLAYMOVE | LCD_MOVERIGHT);
+    
+  rw_readfrom();
+
 }
 
 // This is for text that flows Left to Right
-void LiquidCrystal::leftToRight(void) {
+void AcksenLiquidCrystal::leftToRight(void) {
   _displaymode |= LCD_ENTRYLEFT;
+
+  rw_writeto();
+
   command(LCD_ENTRYMODESET | _displaymode);
+    
+  rw_readfrom();
+
 }
 
 // This is for text that flows Right to Left
-void LiquidCrystal::rightToLeft(void) {
+void AcksenLiquidCrystal::rightToLeft(void) {
   _displaymode &= ~LCD_ENTRYLEFT;
+
+  rw_writeto();
+
   command(LCD_ENTRYMODESET | _displaymode);
+    
+  rw_readfrom();
+
 }
 
 // This will 'right justify' text from the cursor
-void LiquidCrystal::autoscroll(void) {
+void AcksenLiquidCrystal::autoscroll(void) {
   _displaymode |= LCD_ENTRYSHIFTINCREMENT;
+
+  rw_writeto();
+
   command(LCD_ENTRYMODESET | _displaymode);
+    
+  rw_readfrom();
+
 }
 
 // This will 'left justify' text from the cursor
-void LiquidCrystal::noAutoscroll(void) {
+void AcksenLiquidCrystal::noAutoscroll(void) {
   _displaymode &= ~LCD_ENTRYSHIFTINCREMENT;
+
+  rw_writeto();
+
   command(LCD_ENTRYMODESET | _displaymode);
+    
+  rw_readfrom();
+
 }
 
 // Allows us to fill the first 8 CGRAM locations
 // with custom characters
-void LiquidCrystal::createChar(uint8_t location, uint8_t charmap[]) {
+void AcksenLiquidCrystal::createChar(uint8_t location, uint8_t charmap[]) {
   location &= 0x7; // we only have 8 locations 0-7
+
+  rw_writeto();
+
   command(LCD_SETCGRAMADDR | (location << 3));
   for (int i=0; i<8; i++) {
     write(charmap[i]);
   }
+    
+  rw_readfrom();
+
 }
 
 /*********** mid level commands, for sending data/cmds */
 
-inline void LiquidCrystal::command(uint8_t value) {
+inline void AcksenLiquidCrystal::command(uint8_t value) {
   send(value, LOW);
 }
 
-inline size_t LiquidCrystal::write(uint8_t value) {
+inline size_t AcksenLiquidCrystal::write(uint8_t value) {
   send(value, HIGH);
   return 1; // assume success
 }
@@ -284,13 +385,11 @@ inline size_t LiquidCrystal::write(uint8_t value) {
 /************ low level data pushing commands **********/
 
 // write either command or data, with automatic 4/8-bit selection
-void LiquidCrystal::send(uint8_t value, uint8_t mode) {
+void AcksenLiquidCrystal::send(uint8_t value, uint8_t mode) {
   digitalWrite(_rs_pin, mode);
 
   // if there is a RW pin indicated, set it low to Write
-  if (_rw_pin != 255) { 
-    digitalWrite(_rw_pin, LOW);
-  }
+  rw_writeto();
   
   if (_displayfunction & LCD_8BITMODE) {
     write8bits(value); 
@@ -300,7 +399,7 @@ void LiquidCrystal::send(uint8_t value, uint8_t mode) {
   }
 }
 
-void LiquidCrystal::pulseEnable(void) {
+void AcksenLiquidCrystal::pulseEnable(void) {
   digitalWrite(_enable_pin, LOW);
   delayMicroseconds(1);    
   digitalWrite(_enable_pin, HIGH);
@@ -309,7 +408,22 @@ void LiquidCrystal::pulseEnable(void) {
   delayMicroseconds(100);   // commands need >37 us to settle
 }
 
-void LiquidCrystal::write4bits(uint8_t value) {
+void AcksenLiquidCrystal::rw_writeto(void) {
+  
+  // Set R/W LOW (if set) to allow Writing to the LCD Display
+  if (_rw_pin != 255) { 
+    digitalWrite(_rw_pin, LOW);
+  }
+}
+
+void AcksenLiquidCrystal::rw_readfrom(void){
+  // Set R/W HIGH (if set) to allow Reading from the LCD Display
+  if (_rw_pin != 255) { 
+    digitalWrite(_rw_pin, HIGH);
+  }
+}
+
+void AcksenLiquidCrystal::write4bits(uint8_t value) {
   for (int i = 0; i < 4; i++) {
     digitalWrite(_data_pins[i], (value >> i) & 0x01);
   }
@@ -317,7 +431,7 @@ void LiquidCrystal::write4bits(uint8_t value) {
   pulseEnable();
 }
 
-void LiquidCrystal::write8bits(uint8_t value) {
+void AcksenLiquidCrystal::write8bits(uint8_t value) {
   for (int i = 0; i < 8; i++) {
     digitalWrite(_data_pins[i], (value >> i) & 0x01);
   }

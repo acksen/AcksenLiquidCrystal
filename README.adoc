@@ -1,11 +1,13 @@
-:repository-owner: arduino-libraries
-:repository-name: LiquidCrystal
+:repository-owner: acksen
+:repository-name: AcksenLiquidCrystal
 
 = {repository-name} Library for Arduino =
 
 image:https://github.com/{repository-owner}/{repository-name}/actions/workflows/check-arduino.yml/badge.svg["Check Arduino status", link="https://github.com/{repository-owner}/{repository-name}/actions/workflows/check-arduino.yml"]
 image:https://github.com/{repository-owner}/{repository-name}/actions/workflows/compile-examples.yml/badge.svg["Compile Examples status", link="https://github.com/{repository-owner}/{repository-name}/actions/workflows/compile-examples.yml"]
 image:https://github.com/{repository-owner}/{repository-name}/actions/workflows/spell-check.yml/badge.svg["Spell Check status", link="https://github.com/{repository-owner}/{repository-name}/actions/workflows/spell-check.yml"]
+
+This is a fork of the Arduino LiquidCrystal library v1.0.7, to allow control of RW signal.
 
 This library allows an Arduino board to control liquid crystal displays (LCDs) based on the Hitachi HD44780 (or a compatible) chipset, which is found on most text-based LCDs.
 
@@ -17,6 +19,7 @@ https://www.arduino.cc/en/Reference/{repository-name}
 
 Copyright (C) 2006-2008 Hans-Christoph Steiner. All rights reserved.
 Copyright (c) 2010 Arduino LLC. All right reserved.
+Copyright (c) 2023, Acksen Ltd. All rights reserved.
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
