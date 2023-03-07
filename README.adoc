@@ -7,9 +7,9 @@ This is a fork of the Arduino LiquidCrystal library v1.0.7, to allow control of 
 
 This library allows an Arduino board to control liquid crystal displays (LCDs) based on the Hitachi HD44780 (or a compatible) chipset, which is found on most text-based LCDs.
 
-For more information about this library please visit us at
+For more information about this library please visit the original Arduino documentation at
 
-https://www.arduino.cc/en/Reference/{repository-name}
+https://www.arduino.cc/en/Reference/LiquidCrystal
 
 == License ==
 
